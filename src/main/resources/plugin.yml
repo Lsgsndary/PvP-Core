@@ -1,0 +1,25 @@
+name: PvPCore
+version: '${version}'
+main: com.pvpcore.PvPCore
+api-version: '1.21'
+description: Combat tag, combat timer display, and PvP restrictions. Everything is off until enabled in config.yml.
+author: PvPCore
+
+commands:
+  pvpcore:
+    description: PvPCore admin and status commands.
+    usage: /pvpcore <reload|status|untag> [player]
+    aliases: [pvpc]
+
+permissions:
+  pvpcore.admin:
+    description: Use /pvpcore reload and /pvpcore untag.
+    default: op
+    children:
+      pvpcore.status: true
+  pvpcore.status:
+    description: Use /pvpcore status to see if a player is in combat.
+    default: true
+  pvpcore.bypass:
+    description: Never get combat tagged (and so never get any combat restrictions).
+    default: false

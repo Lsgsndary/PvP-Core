@@ -1,0 +1,147 @@
+# ============================================================================
+#  PvPCore configuration
+# ----------------------------------------------------------------------------
+#  EVERY feature is disabled by default. The plugin does nothing until you
+#  turn something on. After editing, run /pvpcore reload (no restart needed).
+#
+#  Text uses MiniMessage formatting, e.g. <red>, <bold>, <gradient:red:gold>.
+#  Preview/build messages at: https://webui.advntr.dev/
+#
+#  Placeholders:
+#    {prefix}  - the prefix defined under messages.prefix
+#    {time}    - seconds of combat left (rounded up)
+#    {player}  - a player's name (where noted)
+# ============================================================================
+
+# Do not change. Used to detect old config files in future updates.
+config-version: 1
+
+# ----------------------------------------------------------------------------
+# 1. COMBAT TAG
+# This is the master feature. The display, no-elytra and every option below
+# only act on players who are combat tagged, so they need this enabled too.
+# ----------------------------------------------------------------------------
+combat-tag:
+  # Turn combat tagging on or off.
+  enabled: false
+
+  # How long (in seconds) a player stays in combat after the last hit.
+  duration-seconds: 15
+
+  # true  = every new hit restarts the timer at the full duration.
+  # false = the timer keeps counting down from the first hit; new hits do not extend it.
+  reset-timer-on-new-hit: true
+
+  # true = players are also tagged when they hit a mob or a mob hits them.
+  # false = only player-vs-player hits (melee, arrows, tridents, other
+  #         player-fired projectiles) tag players.
+  tag-on-mob-damage: false
+
+  # Worlds where nobody gets combat tagged (use exact world folder names).
+  # Example:
+  # disabled-worlds:
+  #   - world_lobby
+  disabled-worlds: []
+
+# ----------------------------------------------------------------------------
+# 2. COMBAT TIMER DISPLAY
+# How tagged players see their combat status.
+#   BOSSBAR   - boss bar at the top of the screen counting down.
+#   ACTIONBAR - text above the hotbar counting down.
+#   CHAT      - no countdown; only the "in combat" / "out of combat" chat messages.
+#   HIDDEN    - nothing at all: no countdown and no tag messages.
+# In BOSSBAR and ACTIONBAR modes the chat messages are also sent, unless you
+# blank them out under "messages" (set them to "").
+# ----------------------------------------------------------------------------
+display:
+  display-mode: CHAT
+
+  bossbar:
+    # Title of the boss bar. Supports {time}.
+    title: "<red><bold>In combat</bold></red> <gray>-</gray> <white>{time}s</white>"
+    # Colors: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+    color: RED
+    # Styles: PROGRESS (solid), NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20
+    style: PROGRESS
+
+  actionbar:
+    # Text shown above the hotbar. Supports {time}.
+    text: "<red>⚔ In combat <gray>-</gray> <white>{time}s</white> ⚔"
+
+# ----------------------------------------------------------------------------
+# 3. NO ELYTRA IN COMBAT
+# ----------------------------------------------------------------------------
+no-elytra:
+  # true = tagged players cannot start gliding, and anyone already gliding
+  # when they get tagged is knocked out of the glide.
+  enabled: false
+
+  # true = tagged players cannot use firework rockets to boost an elytra.
+  # Works on its own even if "enabled" above is false.
+  block-firework-boost: false
+
+# ----------------------------------------------------------------------------
+# 4. OPTIONAL EXTRAS
+# ----------------------------------------------------------------------------
+combat-log:
+  # true = a player who disconnects while tagged is killed (items drop as normal).
+  enabled: false
+  # true = also punish players who were kicked (e.g. by a staff member).
+  # Leave false so kicks and server restarts never kill anyone.
+  punish-on-kick: false
+  # true = announce combat loggers to the whole server (messages.combat-log-broadcast).
+  broadcast: true
+
+blocked-commands:
+  # true = tagged players cannot run the commands listed below.
+  enabled: false
+  # Command names without the slash, lowercase. Plugin prefixes are handled
+  # automatically ("spawn" also blocks "/essentials:spawn"), but other aliases
+  # are not: if a plugin also offers "/espawn", add "espawn" too.
+  commands:
+    - spawn
+    - home
+    - homes
+    - tpa
+    - tpahere
+    - tpaccept
+    - warp
+    - back
+    - rtp
+
+block-ender-pearls:
+  # true = tagged players cannot throw ender pearls (the pearl is not used up).
+  enabled: false
+
+untag-on-death:
+  # true = a player's combat tag is removed when they die.
+  # false = the timer keeps running after death and respawn.
+  enabled: false
+
+# ----------------------------------------------------------------------------
+# MESSAGES  (set any message to "" to stop it being sent)
+# ----------------------------------------------------------------------------
+messages:
+  prefix: "<dark_gray>[<red>PvP</red>]</dark_gray> "
+  tagged: "{prefix}<red>You are now in combat! Do not log out.</red>"
+  untagged: "{prefix}<green>You are no longer in combat.</green>"
+  elytra-denied: "{prefix}<red>You cannot use an elytra while in combat.</red>"
+  firework-denied: "{prefix}<red>You cannot boost with fireworks while in combat.</red>"
+  command-blocked: "{prefix}<red>You cannot use that command while in combat.</red>"
+  ender-pearl-denied: "{prefix}<red>You cannot throw ender pearls while in combat.</red>"
+  # Supports {player}
+  combat-log-broadcast: "{prefix}<yellow>{player}</yellow> <red>logged out during combat and was killed.</red>"
+
+  # Command messages
+  reload: "{prefix}<green>PvPCore config reloaded.</green>"
+  no-permission: "{prefix}<red>You do not have permission to do that.</red>"
+  player-not-found: "{prefix}<red>Player not found or not online.</red>"
+  # Supports {player} and {time}
+  status-tagged: "{prefix}<yellow>{player}</yellow> <red>is in combat</red> <gray>({time}s left)</gray>"
+  # Supports {player}
+  status-not-tagged: "{prefix}<yellow>{player}</yellow> <green>is not in combat.</green>"
+  # Supports {player}
+  untag-success: "{prefix}<green>Removed the combat tag from</green> <yellow>{player}</yellow>"
+  untag-not-tagged: "{prefix}<yellow>{player}</yellow> <gray>is not in combat.</gray>"
+  usage: "{prefix}<gray>Usage: /pvpcore <reload|status|untag> [player]</gray>"
+  feature-disabled: "{prefix}<gray>Combat tag is disabled in config.yml.</gray>"
